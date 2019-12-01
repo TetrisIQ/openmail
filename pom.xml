@@ -8,10 +8,11 @@
 		<version>2.1.9.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>de.mail</groupId>
-	<artifactId>client-server</artifactId>
+	<artifactId>Openmail-REST</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mail client server</name>
+	<name>RESTfull Mail Client</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -85,6 +86,15 @@
             <version>1.12.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.200</version>
+            <scope>test</scope>
+        </dependency>
+
+
 
 
 	</dependencies>
@@ -103,7 +113,7 @@
 				<configuration>
 					<compilerPlugins>
 						<plugin>spring</plugin>
-						<plugin>jpa</plugin>
+						<!--<plugin>jpa</plugin>-->
 					</compilerPlugins>
 				</configuration>
 				<dependencies>

@@ -1,18 +1,11 @@
 package de.openmail.model
 
 import com.sun.mail.imap.IMAPFolder
-import de.openmail.ProjectDemosApplication
-import jdk.nashorn.internal.runtime.logging.Logger
-import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import java.lang.Exception
 import javax.mail.*
-import javax.mail.Message
 import javax.persistence.*
-import kotlin.math.log
 
 @Entity
-@Logger
 open class Server(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

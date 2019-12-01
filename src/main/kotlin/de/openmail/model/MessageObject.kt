@@ -11,7 +11,7 @@ import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMultipart
 
 
-@Entity
+//@Entity
 class MessageObject {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

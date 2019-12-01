@@ -7,9 +7,9 @@ import org.springframework.context.annotation.ComponentScan
 
 @ComponentScan("de.openmail.repository", "de.openmail.model", "de.openmail.config", "de.openmail.controller")
 @SpringBootApplication
-open class ProjectDemosApplication
+open class Openmail
 
 fun main(args: Array<String>) {
-    runApplication<ProjectDemosApplication>(*args)
+    runApplication<Openmail>(*args)
 
 }
