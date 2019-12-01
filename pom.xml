@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<groupId>de.mail</groupId>
+	<groupId>de.openmail</groupId>
 	<artifactId>Openmail-REST</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>RESTfull Mail Client</name>
@@ -18,6 +18,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<kotlin.version>1.3.50</kotlin.version>
+		<start-class>de.openmail.Openmail</start-class>
 	</properties>
 
 	<dependencies>
@@ -113,7 +114,7 @@
 				<configuration>
 					<compilerPlugins>
 						<plugin>spring</plugin>
-						<!--<plugin>jpa</plugin>-->
+						<plugin>jpa</plugin>
 					</compilerPlugins>
 				</configuration>
 				<dependencies>
