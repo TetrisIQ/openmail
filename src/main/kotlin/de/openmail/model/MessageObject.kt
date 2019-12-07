@@ -11,13 +11,13 @@ import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMultipart
 
 
-//@Entity
-class MessageObject {
+@Entity
+class MessageObject() {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Int = 0
     @OneToOne
-    lateinit var account: Account
+    var account: Account? = null
 
     //Frome javax.mail
     var messageNumber = 0
@@ -27,36 +27,48 @@ class MessageObject {
 
     @ElementCollection
     @CollectionTable
+    @Column(name = "valueFrom")
     var from: MutableList<String> = mutableListOf()
+
     @ElementCollection
     @CollectionTable
     var allRecipients: MutableList<String> = mutableListOf()
+
     @ElementCollection
     @CollectionTable
     var replyTo: MutableList<String> = mutableListOf()
     var subject: String? = null
     var sentDate: Date? = null
     var receivedDate: Date? = null
-    @OneToOne
+
+    @OneToOne(cascade = arrayOf(CascadeType.ALL))
     var flags: Flag? = null
+
     @ManyToMany
     var content: MutableList<ContentType> = mutableListOf()
     var contentType: String? = null
 
-    constructor(message: Message, account: Account) {
+    constructor(message: Message, account: Account) : this() {
+        this.account = account
         messageNumber = message.messageNumber
         isExpunged = message.isExpunged
         //folder = message.folder
         //session = message.session
         var fromAdress = message.from.get(0) as InternetAddress
         from.add(fromAdress.address)
-        from.add(fromAdress.personal)
+        if (fromAdress.personal != null) {
+            from.add(fromAdress.personal)
+        }
         var recipientsAddress = message.allRecipients.get(0) as InternetAddress
+        if (recipientsAddress.personal != null) {
+            allRecipients.add(recipientsAddress.personal)
+        }
         allRecipients.add(recipientsAddress.address)
-        allRecipients.add(recipientsAddress.personal)
         var replyAddress = message.replyTo.get(0) as InternetAddress
         replyTo.add(replyAddress.address)
-        replyTo.add(replyAddress.personal)
+        if (replyAddress.personal != null) {
+            replyTo.add(replyAddress.personal)
+        }
         subject = message.subject
         sentDate = message.sentDate
         receivedDate = message.receivedDate
@@ -87,11 +99,11 @@ class MessageObject {
 
 
 @Entity
-class Flag {
+class Flag() {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Int = 0
-    var user_flags: Array<out String>? = null
+    //var user_flags = null
     var ANSWERED_BIT = false
     var DELETED_BIT = false
     var DRAFT_BIT = false
@@ -165,9 +177,9 @@ class Flag {
         if (flags!!.contains(Flags.Flag.USER)) {
             flag.user()
         }
-        if (flags!!.userFlags.isNotEmpty()) {
-            flag.user_flags = flags!!.userFlags
-        }
+        //if (flags!!.userFlags.isNotEmpty()) {
+        //flag.user_flags = flags.userFlags as Nothing?
+        //}
         return flag
     }
 
@@ -188,7 +200,7 @@ private fun Message.getContents(): MutableList<ContentType> {
                 result.add(ContentType(Jsoup.parse(html).toString(), part.contentType))
             } else {
                 // throw Exception(part.contentType)
-                println("NASE")
+                //println("NASE")
             }
         }
     }
@@ -205,8 +217,17 @@ private fun Multipart.getBodyParts(): MutableList<BodyPart> {
 }
 
 @Entity
-class ContentType(var content: String, var contentType: String) {
+class ContentType() {
+    var content: String = "";
+    var contentType: String = "";
+
+    constructor(content: String, contentType: String) : this() {
+        this.content = content;
+        this.contentType = contentType;
+
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id : Int = 0
+    val id: Int = 0
 }

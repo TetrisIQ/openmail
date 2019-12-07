@@ -3,28 +3,38 @@ package de.openmail.controller
 import com.google.gson.Gson
 import de.openmail.config.UserService
 import de.openmail.model.MessageObject
+import de.openmail.repository.MessageObjectRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.*
 import javax.mail.Message
 
-@Controller
+@RestController
 @RequestMapping("/msg")
 class MessageControler(
-    @Autowired val userService: UserService
+    @Autowired val userService: UserService,
+    @Autowired val messageObjectRepository: MessageObjectRepository
 ) {
 
     @GetMapping
-    @ResponseBody
-    fun getAllMessages(): String? {
+    fun getAllMessages(): MutableList<MessageObject> {
         var user = userService.currentUser()
-        if (user == null) {
-            throw Exception("User not found")
+        if (user != null) {
+            return user.messages
         }
-        //return messageResponse(user.server.get(0).getAllMessages())
-        return Gson().toJson(user.server.get(0).getAllMessages())
+        return mutableListOf()
+    }
+
+    @PostMapping
+    fun refreshAll() {
+        var user = userService.currentUser()
+        if (user != null) {
+            var ls = user.getAllMessages()
+            //messageObjectRepository.saveAll(ls)
+            for(m in ls) {
+                messageObjectRepository.save(m)
+            }
+        }
     }
 
     private fun messageResponse(allMessages: MutableList<MessageObject>): MutableList<MessageResponse> {

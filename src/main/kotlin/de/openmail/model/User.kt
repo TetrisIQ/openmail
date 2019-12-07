@@ -21,7 +21,11 @@ open class User {
     @ManyToMany(cascade = arrayOf(CascadeType.ALL))
     var server: MutableList<Server> = mutableListOf()
 
-    fun getServerByHost(host : String): Optional<Server> {
+    @ManyToMany
+    var messages: MutableList<MessageObject> = mutableListOf()
+
+
+    fun getServerByHost(host: String): Optional<Server> {
         for (s in server) {
             if (s.host == host) {
                 return Optional.of(s)
@@ -30,7 +34,19 @@ open class User {
         return Optional.empty<Server>()
     }
 
-    fun getServerById(serverId : Int): Optional<Server> {
+    fun getMessage(server: Server, account: Account): MutableList<MessageObject> {
+        return mutableListOf<MessageObject>()
+    }
+
+    fun getAllMessages(): MutableList<MessageObject> {
+        var ls: MutableList<MessageObject> = mutableListOf()
+        for (s in server) {
+            ls.addAll(s.getAllMessages())
+        }
+        return ls
+    }
+
+    fun getServerById(serverId: Int): Optional<Server> {
         for (s in server) {
             if (s.id == serverId) {
                 return Optional.of(s)

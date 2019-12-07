@@ -6,13 +6,17 @@ import javax.mail.*
 import javax.persistence.*
 
 @Entity
-open class Server(
+open class Server() {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Int,
-    val host: String
+    var id: Int = 0
+    var host: String = ""
 
-) {
+    constructor(id : Int, host : String) : this() {
+        this.id = id
+        this.host = host
+    }
 
     @OneToMany()
     var account: MutableList<Account> = mutableListOf()
