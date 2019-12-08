@@ -7,8 +7,6 @@ import javax.mail.Flags.Flag.SEEN
 import com.sun.mail.imap.protocol.ENVELOPE
 import com.sun.mail.imap.protocol.FLAGS
 import com.sun.mail.imap.IMAPFolder
-import de.openmail.model.Account
-import de.openmail.model.Server
 import javax.mail.*
 import jdk.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.getFlags
 import org.jsoup.Jsoup

@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class UserService : UserDetailsService {
@@ -15,13 +16,13 @@ class UserService : UserDetailsService {
     @Autowired
 	lateinit var userRepository: UserRepository
 
-	fun currentUser(): de.openmail.model.User? {
+	fun currentUser(): Optional<de.openmail.model.User> {
 		val auth = SecurityContextHolder.getContext().getAuthentication()
 		val user = userRepository.findByUsername((auth.getPrincipal() as UserDetails).getUsername())
 		if (user.isPresent()) {
-			return user.get()
+            return Optional.of(user.get())
 		}
-		return null
+		return Optional.empty()
 	}
 
 	override fun loadUserByUsername(username: String): UserDetails? {
