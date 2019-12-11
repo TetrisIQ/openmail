@@ -11,6 +11,7 @@ import de.openmail.repository.ImapFolderMappingRepository
 import de.openmail.repository.ServerRepository
 import de.openmail.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -62,7 +63,6 @@ class Management(
         }
         return mapping.get()
     }
-
 
     @PostMapping("/startup/server")
     fun writeServersToDatabase() {

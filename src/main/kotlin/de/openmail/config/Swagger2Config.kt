@@ -27,8 +27,8 @@ class Swagger2Config {
 
     private fun apiEndPointsInfo(): ApiInfo {
         return ApiInfoBuilder().title("Openmail")
-            .description("is a RESTFUL Email client ")
-            .contact(Contact("TetrisIQ", "https://twitter.com/tetrisiq", "tetrisiq@web.de"))
+            .description("is a RESTful Email client ")
+            .contact(Contact("TetrisIQ", "https://github.com/TetrisIQ/openmail", "tetrisiq@web.de"))
             .license("GNU General Public License v3.0")
             .licenseUrl("https://github.com/TetrisIQ/openmail/blob/master/LICENSE")
             .version("1.0.0")

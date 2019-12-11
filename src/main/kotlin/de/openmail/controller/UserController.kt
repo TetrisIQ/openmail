@@ -1,5 +1,6 @@
 package de.openmail.controller
 
+import com.google.gson.Gson
 import de.openmail.config.UserService
 import de.openmail.model.User
 import org.springframework.beans.factory.annotation.Autowired
@@ -8,17 +9,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 
-@Controller
+@RestController
 @RequestMapping("user")
 class UserController(
     @Autowired val userService: UserService
 ) {
     @GetMapping
     @ResponseBody
-    fun getAll(): MutableIterable<User> {
+    fun getAll(): String? {
         var users = userService.userRepository.findAll()
-        //return Gson().toJson(userResponse(users)) //for Some reason Spring try to send a mail at this point
-        return users
+        return Gson().toJson(users) //for some reason a user will throw some errors TODO: find a fix for this!
+        //return users
     }
 
     @PostMapping("/new")
@@ -28,4 +29,12 @@ class UserController(
         userService.userRepository.save(user);
     }
 
+    @PostMapping("/update/{password}")
+    @ResponseBody
+    fun updatePassword(@PathVariable password : String): User {
+        var user: User = userService.currentUser().get()
+        user.password = BCryptPasswordEncoder().encode(password)
+        userService.userRepository.save(user)
+        return user
+    }
 }
