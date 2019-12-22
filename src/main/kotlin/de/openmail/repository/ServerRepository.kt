@@ -7,4 +7,6 @@ import java.util.*
 interface ServerRepository : JpaRepository<AbstractServer, Int> {
 
     fun findByName(name: String): Optional<AbstractServer>
+
+
 }

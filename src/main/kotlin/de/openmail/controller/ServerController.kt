@@ -5,32 +5,47 @@ import de.openmail.model.Credential
 import de.openmail.model.User
 import de.openmail.model.server.AbstractServer
 import de.openmail.model.server.CustomMailCow
-import de.openmail.model.server.ImapFolderMapping
 import de.openmail.repository.CredentialRepository
 import de.openmail.repository.ImapFolderMappingRepository
 import de.openmail.repository.ServerRepository
 import de.openmail.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.*
+import java.lang.Exception
 
 @RestController
-class Management(
+@RequestMapping("server")
+class ServerController(
     @Autowired val userService: UserService,
     @Autowired val userRepository: UserRepository,
     @Autowired val credentialRepository: CredentialRepository,
-    @Autowired val serverRepository: ServerRepository,
-    @Autowired val imapFolderMappingRepository: ImapFolderMappingRepository
-) {
+    @Autowired val serverRepository: ServerRepository
 
-    @PostMapping("/server/{serverName}")
+) {
+    @PostMapping("/{serverName}")
     fun addServer(@PathVariable serverName: String) {
         when (serverName) {
             "CustomMailCow" -> saveServerAndUser(CustomMailCow())
             "" -> print("...")
-
         }
+    }
 
+    @GetMapping
+    fun getAllServer(): MutableList<AbstractServer> {
+        return serverRepository.findAll()
+    }
+
+    @PutMapping("/{serverId}")
+    fun addCredential(@PathVariable serverId: Int, @RequestBody credential: Credential) {
+        var server = serverRepository.findById(serverId).get()
+        for (cred in server.credentials) {
+            if (cred.label == credential.label) {
+                throw Exception("Label taken")
+            }
+        }
+        credentialRepository.save(credential)
+        server.addCredential(credential)
+        serverRepository.save(server)
     }
 
     private fun saveServerAndUser(server: AbstractServer) {
@@ -39,34 +54,4 @@ class Management(
         user.addServer(server)
         userRepository.save(user)
     }
-
-    @GetMapping("/server")
-    fun getAllServer(): MutableList<AbstractServer> {
-        return serverRepository.findAll()
-    }
-
-    @PutMapping("/server/{serverId}")
-    fun addCredential(@PathVariable serverId: Int, @RequestBody credential: Credential) {
-        credentialRepository.save(credential)
-        var server = serverRepository.findById(serverId).get()
-        server.addCredential(credential)
-        serverRepository.save(server)
-    }
-
-
-    @PutMapping("mapping/{imapFolderMappingId}")
-    fun manageImapFolderMapping(@PathVariable imapFolderMappingId: Int, @RequestBody imapFolderMapping: ImapFolderMapping): ImapFolderMapping {
-        var mapping = imapFolderMappingRepository.findById(imapFolderMappingId)
-        if (mapping.isPresent) {
-            mapping.get().merge(imapFolderMapping)
-            imapFolderMappingRepository.save(mapping.get())
-        }
-        return mapping.get()
-    }
-
-    @PostMapping("/startup/server")
-    fun writeServersToDatabase() {
-        serverRepository.save(CustomMailCow())
-    }
-
 }

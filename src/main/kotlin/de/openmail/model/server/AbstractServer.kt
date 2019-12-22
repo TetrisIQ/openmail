@@ -70,7 +70,7 @@ abstract class AbstractServer {
         }
     }
 
-    fun getFolder(): List<String> {
+    fun getFolder(username : String, password : String): MutableList<String> {
         var imapFolder: IMAPFolder? = null
         var store: Store? = null
         try {
@@ -79,7 +79,7 @@ abstract class AbstractServer {
             val session = Session.getDefaultInstance(props, null)
 
             store = session.getStore("imaps")
-            store!!.connect(imapHost, this.credentials[0].username, this.credentials[0].password)
+            store!!.connect(imapHost, username, password)
 
             val root = store.defaultFolder
 
